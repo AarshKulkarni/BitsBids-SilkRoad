@@ -1,6 +1,7 @@
 package com.silkroad.BitsBids.models;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -27,6 +28,8 @@ public class Product {
     private String description;
     private Long initialPrice;
     private Long updatedPrice;
+    private String productType;
+    private List<String> images;
 
     @CreationTimestamp
     private Timestamp createdOn;

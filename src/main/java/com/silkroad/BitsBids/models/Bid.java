@@ -13,16 +13,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="Bid")
+@Table(name="Bids")
 public class Bid {
     @Id
     private Long bidId;
     private Long bidderId;
     private Long productId;
     private Long bidAmount;
-    private String productType;
-    
-    
+        
     private LocalDateTime bidDateTime;
 
 
