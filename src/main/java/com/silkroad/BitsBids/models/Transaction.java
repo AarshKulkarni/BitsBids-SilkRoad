@@ -1,5 +1,9 @@
 package com.silkroad.BitsBids.models;
 
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,13 +17,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "transaction")
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String email;
-    private String password;
-    private Long money;
+    private Long transactionId;
+    private Long buyerId;
+    private Long productId;
+    private Long sellerId;
+    private Long amount;
+
+    @Column(name = "buyDateTime")
+    private LocalDateTime buyDateTime;
 }
