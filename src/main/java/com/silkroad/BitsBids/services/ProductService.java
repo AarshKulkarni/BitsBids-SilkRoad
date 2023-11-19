@@ -1,13 +1,16 @@
 package com.silkroad.BitsBids.services;
 
-import com.silkroad.BitsBids.models.Product;
-import com.silkroad.BitsBids.repositories.ProductRepository;
-
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
 import org.springframework.stereotype.Service;
-import java.util.List;
+
+import com.silkroad.BitsBids.models.Product;
+import com.silkroad.BitsBids.repositories.ProductRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 
 @Service
@@ -30,12 +33,12 @@ public class ProductService {
 
     // READ
     public Product findProduct(Long id){
-        return productRepository.findById(id).get();
+        return productRepository.findById(id).orElseThrow(()->new EntityNotFoundException("invalid id")) ;
     }
 
     public List<Product> findAllByType(String type){
         try {
-          return productRepository.findByProductType(type).get();  
+        return productRepository.findByProductType(type).get();  
         } catch (NoSuchElementException e) {
             return null;
         }

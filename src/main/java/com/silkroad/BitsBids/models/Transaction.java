@@ -1,9 +1,12 @@
 package com.silkroad.BitsBids.models;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 
-import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +30,9 @@ public class Transaction {
     private Long sellerId;
     private Long amount;
 
-    @Column(name = "buyDateTime")
-    private LocalDateTime buyDateTime;
+    @CreationTimestamp
+    private Timestamp transactionTime;
+    
+    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern="dd-MM-yyyy")
+    private LocalDate transactionDate;
 }
