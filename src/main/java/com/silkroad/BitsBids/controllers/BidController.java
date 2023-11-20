@@ -1,5 +1,6 @@
 package com.silkroad.BitsBids.controllers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.silkroad.BitsBids.ResponseHandler;
 import com.silkroad.BitsBids.models.Bid;
 import com.silkroad.BitsBids.services.BidService;
 
@@ -25,12 +27,17 @@ public class BidController {
 
     // CREATE
     @PostMapping("/create")
-    public ResponseEntity<Bid> registerBid(@RequestBody Bid bid) {
-        try {
-            return new ResponseEntity<>(bidService.registerBid(bid), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> registerBid(@RequestBody Bid bid) {
+        Long productId = bid.getProductId();
+        Bid lastBid = bidService.lastBid(productId);
+
+        if(bid.getBidAmount() <= lastBid.getBidAmount()){
+            return ResponseHandler.generateResponse("Bid amount cannot be lower than last bid", HttpStatus.BAD_REQUEST, null);
+        } else if(lastBid.getBidDateTime().plusMinutes(10).isBefore(LocalDateTime.now())){
+            return ResponseHandler.generateResponse("Time for Bidding has ended", HttpStatus.BAD_REQUEST, null);
         }
+        bidService.registerBid(bid);
+        return ResponseHandler.generateResponse("Bid successfully placed", HttpStatus.OK, bid);
     }
 
     // READ
