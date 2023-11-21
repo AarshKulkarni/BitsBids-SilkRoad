@@ -14,14 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.silkroad.BitsBids.ResponseHandler;
 import com.silkroad.BitsBids.models.Bid;
+import com.silkroad.BitsBids.models.Product;
 import com.silkroad.BitsBids.services.BidService;
+import com.silkroad.BitsBids.services.ProductService;
 
 @RestController
 @RequestMapping("/bids")
 public class BidController {
     private final BidService bidService;
+    private final ProductService productService;
 
-    public BidController(BidService bidService) {
+    public BidController(BidService bidService, ProductService productService) {
+        this.productService = productService;
         this.bidService = bidService;
     }
 
@@ -37,6 +41,8 @@ public class BidController {
             return ResponseHandler.generateResponse("Time for Bidding has ended", HttpStatus.BAD_REQUEST, null);
         }
         bidService.registerBid(bid);
+        Product biddedProduct = productService.findProduct(bid.getProductId());
+        biddedProduct.setUpdatedPrice(bid.getBidAmount());
         return ResponseHandler.generateResponse("Bid successfully placed", HttpStatus.OK, bid);
     }
 
@@ -49,5 +55,6 @@ public class BidController {
     @GetMapping("/listById")
     public Bid listBidById(@RequestParam Long bidId) {
         return bidService.findBid(bidId);
+
     }
 }

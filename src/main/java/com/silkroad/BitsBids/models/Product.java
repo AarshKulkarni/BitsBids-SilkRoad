@@ -25,6 +25,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long productId;
     private Long sellerId;
+    private String productName;
     private String description;
     private Long initialPrice;
     private Long updatedPrice;
