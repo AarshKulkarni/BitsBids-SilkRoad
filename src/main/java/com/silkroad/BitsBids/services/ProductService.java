@@ -1,7 +1,7 @@
 package com.silkroad.BitsBids.services;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -37,11 +37,7 @@ public class ProductService {
     }
 
     public List<Product> findAllByType(String type){
-        try {
-        return productRepository.findByProductType(type).get();  
-        } catch (NoSuchElementException e) {
-            return null;
-        }
+        return productRepository.findByProductType(type).orElse(Collections.<Product>emptyList());  
     }
 
     public List<Product> getAll(){

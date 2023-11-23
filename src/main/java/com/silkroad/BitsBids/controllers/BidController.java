@@ -2,6 +2,7 @@ package com.silkroad.BitsBids.controllers;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +34,23 @@ public class BidController {
     @PostMapping("/create")
     public ResponseEntity<?> registerBid(@RequestBody Bid bid) {
         Long productId = bid.getProductId();
-        Bid lastBid = bidService.lastBid(productId);
+        Optional<Bid> lastBid = bidService.lastBid(productId);
 
-        if(bid.getBidAmount() <= lastBid.getBidAmount()){
+        if(lastBid.isEmpty()){
+            bidService.registerBid(bid);
+            Product biddedProduct = productService.findProduct(bid.getProductId());
+            biddedProduct.setUpdatedPrice(bid.getBidAmount());
+            return ResponseHandler.generateResponse("Bid successfully placed", HttpStatus.OK, bid);    
+        }
+
+        if(bid.getBidAmount() <= lastBid.get().getBidAmount()){
             return ResponseHandler.generateResponse("Bid amount cannot be lower than last bid", HttpStatus.BAD_REQUEST, null);
-        } else if(lastBid.getBidDateTime().plusMinutes(10).isBefore(LocalDateTime.now())){
+        } else if(lastBid.get().getBidDateTime().plusMinutes(10).isBefore(LocalDateTime.now())){
             return ResponseHandler.generateResponse("Time for Bidding has ended", HttpStatus.BAD_REQUEST, null);
         }
-        bidService.registerBid(bid);
         Product biddedProduct = productService.findProduct(bid.getProductId());
         biddedProduct.setUpdatedPrice(bid.getBidAmount());
+        bidService.registerBid(bid);
         return ResponseHandler.generateResponse("Bid successfully placed", HttpStatus.OK, bid);
     }
 
@@ -53,8 +61,12 @@ public class BidController {
     }
 
     @GetMapping("/listById")
-    public Bid listBidById(@RequestParam Long bidId) {
-        return bidService.findBid(bidId);
-
+    public ResponseEntity<?> listBidById(@RequestParam Long bidId) {
+        if(bidService.findBid(bidId).isEmpty()){
+            return ResponseHandler.generateResponse("No such bid exists",HttpStatus.OK, null);
+        } else {
+            Bid requiredBid = bidService.findBid(bidId).get();
+            return ResponseHandler.generateResponse("", HttpStatus.OK, requiredBid);
+        }
     }
 }
