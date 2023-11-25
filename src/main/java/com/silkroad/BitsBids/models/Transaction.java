@@ -1,19 +1,17 @@
 package com.silkroad.BitsBids.models;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "transaction")
@@ -36,8 +34,18 @@ public class Transaction {
 
     @CreationTimestamp
     private LocalDateTime transactionTime;
+
+    public Transaction(Long buyerId, Long productId, Long sellerId, Long amount, LocalDateTime transactionTime) {
+        this.buyerId = buyerId;
+        this.productId = productId;
+        this.sellerId = sellerId;
+        this.amount = amount;
+        this.transactionTime = transactionTime;
+    }
     
-    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern="dd-MM-yyyy")
-    @Column(nullable = false)
-    private LocalDate transactionDate;
+    
+    
+
+
 }
+
