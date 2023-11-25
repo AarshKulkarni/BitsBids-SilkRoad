@@ -2,7 +2,6 @@ package com.silkroad.BitsBids.loaders;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
 
 import com.silkroad.BitsBids.models.Product;
 import com.silkroad.BitsBids.repositories.ProductRepository;
