@@ -1,7 +1,6 @@
 package com.silkroad.BitsBids.models;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -40,7 +39,7 @@ public class Product {
     private String productType;
 
     @Column(nullable = false)
-    private List<String> images;
+    private String[] images;
 
     @CreationTimestamp
     private Timestamp createdOn;
@@ -49,7 +48,7 @@ public class Product {
     private Timestamp updatedOn;
 
     public Product(Long sellerId, String productName, String description, Long initialPrice, Long updatedPrice,
-            String productType, List<String> images) {
+            String productType, String[] images) {
         this.sellerId = sellerId;
         this.productName = productName;
         this.description = description;
