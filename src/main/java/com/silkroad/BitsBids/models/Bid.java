@@ -3,17 +3,13 @@ package com.silkroad.BitsBids.models;
 import java.time.LocalDateTime;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name="Bids")
@@ -21,11 +17,29 @@ public class Bid {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long bidId;
+
+    @Column(nullable = false)
     private Long bidderId;
+
+    @Column(nullable = false)
     private Long productId;
+
+    @Column(nullable = false)
     private Long bidAmount;
-        
+
+    @Column(nullable = false)
     private LocalDateTime bidDateTime;
 
+    @Column(nullable = false)
+    private Boolean isActive;
 
+    public Bid(Long bidderId, Long productId, Long bidAmount, LocalDateTime bidDateTime) {
+        this.bidderId = bidderId;
+        this.productId = productId;
+        this.bidAmount = bidAmount;
+        this.bidDateTime = bidDateTime;
+        this.isActive = true;
+    }
+
+    
 }

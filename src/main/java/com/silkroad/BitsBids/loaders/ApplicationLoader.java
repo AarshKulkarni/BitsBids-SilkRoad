@@ -8,8 +8,7 @@ import com.silkroad.BitsBids.models.Product;
 import com.silkroad.BitsBids.repositories.ProductRepository;
 
 import lombok.AllArgsConstructor;
-
-@Component
+//@Component
 @AllArgsConstructor
 public class ApplicationLoader implements ApplicationRunner {
 
