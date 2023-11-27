@@ -1,8 +1,5 @@
 package com.silkroad.BitsBids.models;
 
-import java.time.LocalDateTime;
-
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="Bids")
+@Table(name="bids")
 public class Bid {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -27,19 +24,9 @@ public class Bid {
     @Column(nullable = false)
     private Long bidAmount;
 
-    @Column(nullable = false)
-    private LocalDateTime bidDateTime;
-
-    @Column(nullable = false)
-    private Boolean isActive;
-
-    public Bid(Long bidderId, Long productId, Long bidAmount, LocalDateTime bidDateTime) {
+    public Bid(Long bidderId, Long productId, Long bidAmount) {
         this.bidderId = bidderId;
         this.productId = productId;
         this.bidAmount = bidAmount;
-        this.bidDateTime = bidDateTime;
-        this.isActive = true;
     }
-
-    
 }

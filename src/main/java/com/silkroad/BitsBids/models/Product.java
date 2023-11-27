@@ -1,11 +1,9 @@
 package com.silkroad.BitsBids.models;
 
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,28 +31,26 @@ public class Product {
     private Long initialPrice;
 
     @Column(nullable = false)
-    private Long updatedPrice;
-
-    @Column(nullable = false)
     private String productType;
 
     @Column(nullable = false)
-    private String[] images;
+    private String image;
 
-    @CreationTimestamp
-    private Timestamp createdOn;
+    private Boolean isBidable;
 
-    @UpdateTimestamp
-    private Timestamp updatedOn;
+    @OneToMany(targetEntity = Bid.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "prodbid_fk",referencedColumnName = "productId")
+    private List<Bid> previousBids;
 
-    public Product(Long sellerId, String productName, String description, Long initialPrice, Long updatedPrice,
-            String productType, String[] images) {
+    public Product(Long sellerId, String productName, String description, Long initialPrice,
+            String productType,String images) {
         this.sellerId = sellerId;
         this.productName = productName;
         this.description = description;
         this.initialPrice = initialPrice;
-        this.updatedPrice = updatedPrice;
         this.productType = productType;
-        this.images = images;
+        this.image = images;
+        this.previousBids = new ArrayList<Bid>();
+        this.isBidable = true;
     }
 }

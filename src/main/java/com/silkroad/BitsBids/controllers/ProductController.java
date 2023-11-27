@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.silkroad.BitsBids.ResponseHandler;
 import com.silkroad.BitsBids.models.Product;
 import com.silkroad.BitsBids.services.ProductService;
 
@@ -24,12 +25,12 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // CREATE 
+    // CREATE
     @PostMapping("/create")
-    public ResponseEntity<Product> registerProduct(@RequestBody Product product){
+    public ResponseEntity<Product> registerProduct(@RequestBody Product product) {
         try {
-            return new ResponseEntity<>(productService.registerProduct(product),HttpStatus.OK);
-            
+            return new ResponseEntity<>(productService.registerProduct(product), HttpStatus.OK);
+
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -37,10 +38,10 @@ public class ProductController {
 
     // DELETE
     @DeleteMapping("/delete")
-    public ResponseEntity<Boolean> deleteProduct(@RequestParam Long productId){
+    public ResponseEntity<Boolean> deleteProduct(@RequestParam Long productId) {
         try {
             productService.deleteProduct(productId);
-            return new ResponseEntity<>(true,HttpStatus.OK);
+            return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(productId + " Could not be deleted");
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
@@ -49,17 +50,30 @@ public class ProductController {
 
     // READ
     @GetMapping("/listAll")
-    public List<Product> listProducts(){
+    public List<Product> listProducts() {
         return productService.getAll();
     }
 
     @GetMapping("/listbyId")
-    public Product listProductsbyId(@RequestParam Long productId){
+    public Product listProductsbyId(@RequestParam Long productId) {
         return productService.findProduct(productId);
     }
 
     @GetMapping("/listbyCategory")
-    public List<Product> listProductsbyCategory(@RequestParam String category){
+    public List<Product> listProductsbyCategory(@RequestParam String category) {
         return productService.findAllByType(category);
+    }
+
+    @PostMapping("/unbid")
+    public ResponseEntity<?> unbidProduct(@RequestParam Long prodId) {
+        if (!productService.isExists(prodId)) {
+            return ResponseHandler.generateResponse("Product of given Id not found", HttpStatus.NOT_FOUND, null);
+        } else {
+            Product product = productService.findProduct(prodId);
+            product.setIsBidable(false);
+            productService.registerProduct(product);
+            return ResponseHandler.generateResponse("Bidded for this product stopped", HttpStatus.OK, product);
+
+        }
     }
 }

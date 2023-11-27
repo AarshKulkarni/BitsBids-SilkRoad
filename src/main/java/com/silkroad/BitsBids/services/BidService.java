@@ -17,24 +17,22 @@ public class BidService {
     public BidService(BidRepository bidRepository) {
         this.bidRepository = bidRepository;
     }
-    
+
     // CREATE
-    public Bid registerBid(Bid bid){
+    public Bid registerBid(Bid bid) {
         return bidRepository.save(bid);
     }
 
     // READ
-    public Optional<Bid> findBid(Long id){
+    public Optional<Bid> findBid(Long id) {
         return bidRepository.findById(id);
     }
 
-    public List<Bid> getAllBids(){
-        return StreamSupport.stream(bidRepository.findAll().spliterator(),false).collect(Collectors.toList());
+    public List<Bid> getAllBids() {
+        return StreamSupport.stream(bidRepository.findAll().spliterator(), false).collect(Collectors.toList());
     }
 
-    public Optional<Bid> lastBid(Long productId){
+    public Optional<Bid> lastBid(Long productId) {
         return bidRepository.findTopByProductIdOrderByBidAmountDesc(productId);
     }
 }
-
-

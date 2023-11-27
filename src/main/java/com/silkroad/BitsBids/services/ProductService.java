@@ -44,4 +44,8 @@ public class ProductService {
         return StreamSupport.stream(productRepository.findAll().spliterator(), false)
         .collect(Collectors.toList());
     }
+
+    public Boolean isExists(Long id){
+        return productRepository.existsById(id);   
+    }
 }
