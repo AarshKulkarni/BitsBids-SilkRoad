@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import com.silkroad.BitsBids.ResponseHandler;
 import com.silkroad.BitsBids.models.Product;
 import com.silkroad.BitsBids.services.ProductService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -64,6 +66,16 @@ public class ProductController {
         return productService.findAllByType(category);
     }
 
+    @GetMapping("/listbyUserId")
+    public List<Product> listbyUserId(@RequestParam Long userId) {
+        return productService.findProductsByUserId(userId);
+    }
+
+    public ResponseEntity<?> searchProducts(@RequestParam("query") String query) {
+        List<Product> searchedProds = productService.searchProducts(query);
+        return ResponseHandler.generateResponse("", HttpStatus.OK, searchedProds);
+    }
+
     @PostMapping("/unbid")
     public ResponseEntity<?> unbidProduct(@RequestParam Long prodId) {
         if (!productService.isExists(prodId)) {
@@ -73,7 +85,6 @@ public class ProductController {
             product.setIsBidable(false);
             productService.registerProduct(product);
             return ResponseHandler.generateResponse("Bidded for this product stopped", HttpStatus.OK, product);
-
         }
     }
 }

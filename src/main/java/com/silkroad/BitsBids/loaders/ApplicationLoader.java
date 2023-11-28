@@ -5,18 +5,24 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import com.silkroad.BitsBids.models.Product;
+import com.silkroad.BitsBids.models.User;
 import com.silkroad.BitsBids.repositories.ProductRepository;
+import com.silkroad.BitsBids.repositories.UserRepository;
 
 import lombok.AllArgsConstructor;
 
-@Component
+// @Component
 @AllArgsConstructor
 public class ApplicationLoader implements ApplicationRunner {
 
     private ProductRepository productRepository;
+    private UserRepository userRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        userRepository.save(
+                new User("Aarsh Kulkarni", "f20220184@hyderabad.bits-pilani.ac.in", "ganja-ganja", "040-14991411"));
+
         // Load website data here
         Product[] products = new Product[10];
         products[0] = new Product(1L, "Iphone 10", "An Iphone 10", 10000L, "Electronics",
