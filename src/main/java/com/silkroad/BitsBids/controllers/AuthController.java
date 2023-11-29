@@ -47,7 +47,7 @@ public class AuthController {
             return ResponseHandler.generateResponse("Success", HttpStatus.OK, user);
         }
     }
-
+    @GetMapping("/getUser")
     public ResponseEntity<?> getUser(@RequestParam Long userId){
         Optional<User> user = authService.getUser(userId);
         if(user.isPresent()){
