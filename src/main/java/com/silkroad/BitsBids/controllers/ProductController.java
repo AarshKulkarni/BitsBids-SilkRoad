@@ -29,46 +29,52 @@ public class ProductController {
 
     // CREATE
     @PostMapping("/create")
-    public ResponseEntity<Product> registerProduct(@RequestBody Product product) {
+    public ResponseEntity<?> registerProduct(@RequestBody Product product) {
         try {
-            return new ResponseEntity<>(productService.registerProduct(product), HttpStatus.OK);
+            Product registerProduct = productService.registerProduct(product);
+            return ResponseHandler.generateResponse("",HttpStatus.OK,registerProduct);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseHandler.generateResponse("An error occurred",HttpStatus.OK,null);
         }
     }
 
     // DELETE
     @DeleteMapping("/delete")
-    public ResponseEntity<Boolean> deleteProduct(@RequestParam Long productId) {
+    public ResponseEntity<?> deleteProduct(@RequestParam Long productId) {
         try {
             productService.deleteProduct(productId);
-            return new ResponseEntity<>(true, HttpStatus.OK);
+            return ResponseHandler.generateResponse("Successfully deleted",HttpStatus.OK,true);
+
         } catch (Exception e) {
             System.out.println(productId + " Could not be deleted");
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+            return ResponseHandler.generateResponse("Error deleting product",HttpStatus.BAD_REQUEST,false);
         }
     }
 
     // READ
     @GetMapping("/listAll")
-    public List<Product> listProducts() {
-        return productService.getAll();
+    public ResponseEntity<?> listProducts() {
+        List<Product> products = productService.getAll();
+        return ResponseHandler.generateResponse("",HttpStatus.OK,products);
     }
 
     @GetMapping("/listbyId")
-    public Product listProductsbyId(@RequestParam Long productId) {
-        return productService.findProduct(productId);
+    public ResponseEntity<?> listProductsbyId(@RequestParam Long productId) {
+        Product product = productService.findProduct(productId);
+        return ResponseHandler.generateResponse("",HttpStatus.OK,product);
     }
 
     @GetMapping("/listbyCategory")
-    public List<Product> listProductsbyCategory(@RequestParam String category) {
-        return productService.findAllByType(category);
+    public ResponseEntity<?> listProductsbyCategory(@RequestParam String category) {
+        List<Product> productList = productService.findAllByType(category);
+        return ResponseHandler.generateResponse("",HttpStatus.OK,productList);
     }
 
     @GetMapping("/listbyUserId")
-    public List<Product> listbyUserId(@RequestParam Long userId) {
-        return productService.findProductsByUserId(userId);
+    public ResponseEntity<?> listbyUserId(@RequestParam Long userId) {
+        List<Product> products = productService.findProductsByUserId(userId);
+        return ResponseHandler.generateResponse("",HttpStatus.OK,products);
     }
 
     public ResponseEntity<?> searchProducts(@RequestParam("query") String query) {

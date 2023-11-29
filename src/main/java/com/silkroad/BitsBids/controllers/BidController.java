@@ -64,8 +64,8 @@ public class BidController {
 
     // READ
     @GetMapping("/listAll")
-    public List<Bid> listBids() {
-        return bidService.getAllBids();
+    public ResponseEntity<?> listBids() {
+        return ResponseHandler.generateResponse("",HttpStatus.OK,bidService.getAllBids());
     }
 
     @GetMapping("/listById")

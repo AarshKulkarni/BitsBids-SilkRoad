@@ -1,11 +1,11 @@
 package com.silkroad.BitsBids.services;
 
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-
+import com.silkroad.BitsBids.Hasher;
 import com.silkroad.BitsBids.models.User;
 import com.silkroad.BitsBids.repositories.UserRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -21,7 +21,8 @@ public class AuthService {
         if (userExists) {
             throw new IllegalStateException("User Already Exists");
         } else {
-            return userRepository.save(new User(name, email,password, phoneNumber));
+            String hashedPassword = Hasher.get256Hash(password);
+            return userRepository.save(new User(name, email,hashedPassword, phoneNumber));
         }
     }
 
@@ -29,9 +30,12 @@ public class AuthService {
         Optional<User> user = userRepository.findUserByEmail(email);
         if (user.isEmpty()) {
             return null;
-        } else if(password.matches(user.get().getPassword())) {
-            return userRepository.findUserByEmail(email).get();
         } else {
+            String savedPassword = user.get().getPassword();
+            String hashedPassword = Hasher.get256Hash(password);
+            if (savedPassword.matches(hashedPassword)) {
+                return userRepository.findUserByEmail(email).get();
+            }
             return null;
         }
 
