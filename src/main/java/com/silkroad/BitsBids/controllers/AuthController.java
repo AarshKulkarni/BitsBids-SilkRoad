@@ -1,21 +1,19 @@
 package com.silkroad.BitsBids.controllers;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.silkroad.BitsBids.ResponseHandler;
 import com.silkroad.BitsBids.models.User;
 import com.silkroad.BitsBids.services.AuthService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
 public class AuthController {
 
-    private AuthService authService;
+    private final AuthService authService;
 
     public AuthController(AuthService authService) {
         this.authService = authService;
@@ -26,7 +24,10 @@ public class AuthController {
         try {
             User user = authService.register(registerRequest.name(), registerRequest.email(),
                     registerRequest.password(),
-                    registerRequest.phoneNumber());
+                    registerRequest.phoneNumber(),
+                    registerRequest.hostelName()
+                    );
+            // Set null for security reasons
             user.setPassword(null);
             return ResponseHandler.generateResponse("User Successfully Registered", HttpStatus.CREATED,
                     user);
@@ -39,15 +40,25 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         User user = authService.login(loginRequest.email(), loginRequest.password());
         if (user == null) {
-            return ResponseHandler.generateResponse("Error Occured", HttpStatus.BAD_REQUEST, user);
+            return ResponseHandler.generateResponse("Error Occurred", HttpStatus.BAD_REQUEST, null);
         } else {
+            // Set null for security reasons
             user.setPassword(null);
-            return ResponseHandler.generateResponse("Sucess", HttpStatus.OK, user);
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, user);
+        }
+    }
+
+    public ResponseEntity<?> getUser(@RequestParam Long userId){
+        Optional<User> user = authService.getUser(userId);
+        if(user.isPresent()){
+            return ResponseHandler.generateResponse("",HttpStatus.OK,user);
+        } else {
+            return ResponseHandler.generateResponse("User doesn't exist",HttpStatus.NOT_FOUND,null);
         }
     }
 }
 
-record RegisterRequest(String name, String email, String password, String phoneNumber) {
+record RegisterRequest(String name, String email, String password, String phoneNumber, String hostelName) {
 }
 
 record LoginRequest(String email, String password) {

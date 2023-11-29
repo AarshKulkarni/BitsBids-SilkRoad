@@ -25,16 +25,21 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String phoneNumber;
 
     @Column(nullable = false)
     private Long money;
 
-    public User(String name, String email, String password, String phoneNumber) {
+    @Column(nullable = false)
+    private String hostelName;
+
+    public User(String name, String email, String password, String phoneNumber,String hostelName) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
+        this.hostelName = hostelName;
         this.money = 1000000L;
     }    
 }

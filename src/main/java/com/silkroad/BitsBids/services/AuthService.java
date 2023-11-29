@@ -16,13 +16,13 @@ public class AuthService {
     }
 
 
-    public User register(String name, String email, String password, String phoneNumber) {
+    public User register(String name, String email, String password, String phoneNumber, String hostelName) {
         boolean userExists = userRepository.findUserByEmail(email).isPresent();
         if (userExists) {
             throw new IllegalStateException("User Already Exists");
         } else {
             String hashedPassword = Hasher.get256Hash(password);
-            return userRepository.save(new User(name, email,hashedPassword, phoneNumber));
+            return userRepository.save(new User(name, email,hashedPassword, phoneNumber,hostelName));
         }
     }
 
@@ -39,6 +39,10 @@ public class AuthService {
             return null;
         }
 
+    }
+
+    public Optional<User> getUser(Long userId){
+        return userRepository.findById(userId);
     }
 
 }
