@@ -84,13 +84,13 @@ public class ProductController {
 
     @PostMapping("/unbid")
     public ResponseEntity<?> unbidProduct(@RequestParam Long prodId) {
-        if (!productService.isExists(prodId)) {
-            return ResponseHandler.generateResponse("Product of given Id not found", HttpStatus.NOT_FOUND, null);
+        Product foundProd = productService.findProduct(prodId);
+        if(foundProd == null){
+            return ResponseHandler.generateResponse("Product doesn't exist", HttpStatus.NOT_FOUND, "");
         } else {
-            Product product = productService.findProduct(prodId);
-            product.setIsBidable(false);
-            productService.registerProduct(product);
-            return ResponseHandler.generateResponse("Bidded for this product stopped", HttpStatus.OK, product);
+            foundProd.setIsBidable(false);
+            productService.registerProduct(foundProd);
+            return ResponseHandler.generateResponse("Successfully unbid product", HttpStatus.OK, foundProd);
         }
     }
 }

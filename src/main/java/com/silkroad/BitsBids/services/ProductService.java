@@ -1,16 +1,13 @@
 package com.silkroad.BitsBids.services;
 
+import com.silkroad.BitsBids.models.Product;
+import com.silkroad.BitsBids.repositories.ProductRepository;
+import org.springframework.stereotype.Service;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-import org.springframework.stereotype.Service;
-
-import com.silkroad.BitsBids.models.Product;
-import com.silkroad.BitsBids.repositories.ProductRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ProductService {
@@ -31,15 +28,15 @@ public class ProductService {
 
     // READ
     public Product findProduct(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("invalid id"));
+        return productRepository.findById(id).orElse(null);
     }
 
     public List<Product> findAllByType(String type) {
-        return productRepository.findByProductType(type).orElse(Collections.<Product>emptyList());
+        return productRepository.findByProductType(type).orElse(Collections.emptyList());
     }
 
     public List<Product> findProductsByUserId(Long userId) {
-        return productRepository.findBySellerId(userId).orElse(Collections.<Product>emptyList());
+        return productRepository.findBySellerId(userId).orElse(Collections.emptyList());
     }
 
     public List<Product> getAll() {

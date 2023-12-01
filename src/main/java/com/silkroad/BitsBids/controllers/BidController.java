@@ -36,6 +36,7 @@ public class BidController {
             if (bidedProduct.getPreviousBids().isEmpty() && bidedProduct.getInitialPrice() < bid.getBidAmount()) {
                 List<Bid> biddedList = bidedProduct.getPreviousBids();
                 biddedList.add(bid);
+                bidedProduct.setUpdatedPrice(bid.getBidAmount());
                 bidedProduct.setPreviousBids(biddedList);
                 productService.registerProduct(bidedProduct);
                 return ResponseHandler.generateResponse("Bid Sucessfully Placed", HttpStatus.OK, bidedProduct);
@@ -49,6 +50,7 @@ public class BidController {
                     List<Bid> biddedList = bidedProduct.getPreviousBids();
                     biddedList.add(bid);
                     bidedProduct.setPreviousBids(biddedList);
+                    bidedProduct.setUpdatedPrice(bid.getBidAmount());
                     productService.registerProduct(bidedProduct);
                     return ResponseHandler.generateResponse("Bid Sucessfully Placed", HttpStatus.OK, bidedProduct);
                 } else {

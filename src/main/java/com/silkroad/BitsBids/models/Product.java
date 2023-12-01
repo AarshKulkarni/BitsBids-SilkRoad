@@ -36,14 +36,18 @@ public class Product {
     @Column(nullable = false)
     private String image;
 
+    @Column(nullable = false)
     private Boolean isBidable;
+
+    @Column(nullable = false)
+    private Long updatedPrice;
 
     @OneToMany(targetEntity = Bid.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "prodbid_fk",referencedColumnName = "productId")
     private List<Bid> previousBids;
 
     public Product(Long sellerId, String productName, String description, Long initialPrice,
-            String productType,String images) {
+                   String productType,String images, Long updatedPrice) {
         this.sellerId = sellerId;
         this.productName = productName;
         this.description = description;
@@ -52,5 +56,6 @@ public class Product {
         this.image = images;
         this.previousBids = new ArrayList<Bid>();
         this.isBidable = true;
+        this.updatedPrice = updatedPrice;
     }
 }
