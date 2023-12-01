@@ -56,6 +56,16 @@ public class AuthController {
             return ResponseHandler.generateResponse("User doesn't exist",HttpStatus.NOT_FOUND,null);
         }
     }
+//    Get user money
+    @GetMapping("/money")
+    public ResponseEntity<?> getMoney(@RequestParam Long userId){
+        Optional<User> user = authService.getUser(userId);
+        if(user.isPresent()){
+            return ResponseHandler.generateResponse("",HttpStatus.OK,user.get().getMoney());
+        } else {
+            return ResponseHandler.generateResponse("No such user exists",HttpStatus.BAD_REQUEST, null);
+        }
+    }
 }
 
 record RegisterRequest(String name, String email, String password, String phoneNumber, String hostelName) {
