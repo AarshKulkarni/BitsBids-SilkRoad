@@ -2,6 +2,9 @@ package com.silkroad.BitsBids.controllers;
 
 import java.util.List;
 
+import com.silkroad.BitsBids.models.Bid;
+import com.silkroad.BitsBids.models.User;
+import com.silkroad.BitsBids.services.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,9 +25,11 @@ import com.silkroad.BitsBids.services.ProductService;
 @RequestMapping("/products")
 public class ProductController {
     private final ProductService productService;
+    private final AuthService authService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, AuthService authService) {
         this.productService = productService;
+        this.authService = authService;
     }
 
     // CREATE
@@ -87,8 +92,24 @@ public class ProductController {
         Product foundProd = productService.findProduct(prodId);
         if(foundProd == null){
             return ResponseHandler.generateResponse("Product doesn't exist", HttpStatus.NOT_FOUND, "");
-        } else {
+        }
+        else if(foundProd.getPreviousBids().isEmpty()){
+            return ResponseHandler.generateResponse("There are no bids on this product",HttpStatus.BAD_REQUEST,"");
+        }
+        else {
             foundProd.setIsBidable(false);
+//            Deduction of money for buyer
+            Bid lastBid = foundProd.getPreviousBids().get(foundProd.getPreviousBids().size() - 1);
+            Long deductedAmount = foundProd.getPreviousBids().get(foundProd.getPreviousBids().size() - 1).getBidAmount();
+            User buyer = authService.getUser(lastBid.getBidderId()).get();
+            User seller = authService.getUser(foundProd.getSellerId()).get();
+
+            seller.setMoney(seller.getMoney() + deductedAmount);
+            buyer.setMoney(buyer.getMoney() + deductedAmount);
+
+            authService.saveUser(seller);
+            authService.saveUser(buyer);
+
             productService.registerProduct(foundProd);
             return ResponseHandler.generateResponse("Successfully unbid product", HttpStatus.OK, foundProd);
         }
